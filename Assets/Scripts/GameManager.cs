@@ -2,11 +2,18 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    Wallet _wallet;
+    private Wallet _wallet;
+    private UserInterface _userInterface;
 
     private void Start()
     {
-        _wallet = new Wallet(100);
+        _wallet.Changed += _userInterface.RefreshUIText;
+    }
+
+    public void Init(Wallet wallet, UserInterface userInterface)
+    {
+        _wallet = wallet;
+        _userInterface = userInterface;
     }
 
     private void Update()
@@ -21,7 +28,9 @@ public class GameManager : MonoBehaviour
     private void GetMoreCoins()
     {
         if (Input.GetKeyDown(KeyCode.C))
-            _wallet.Add(25, Currency.Coin);
+        {
+            _wallet.Add(25, Currency.Coin);            
+        }
     }
 
     private void GetMoreDiamond()
