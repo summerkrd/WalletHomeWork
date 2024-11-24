@@ -40,6 +40,8 @@ public class Wallet
 
     public void Add(int value, Currency currency)
     {
+        int currentValue = 0;
+
         if (value < 0)
             value = 0;
 
@@ -50,20 +52,23 @@ public class Wallet
         {
             case Currency.Coin:
                 CoinValue += value;
+                currentValue = CoinValue;
                 Debug.Log("CoinValue: " + CoinValue);
                 break;
 
             case Currency.Diamond:
                 DiamondValue += value;
+                currentValue = DiamondValue;
                 Debug.Log("DiamondValue: " + DiamondValue);
                 break;
 
             case Currency.Energy:
                 EnergyValue += value;
+                currentValue = EnergyValue;
                 Debug.Log("EnergyValue: " + EnergyValue);
                 break;
         }
 
-        Changed?.Invoke(value, currency);        
+        Changed?.Invoke(currentValue, currency);        
     }
 }

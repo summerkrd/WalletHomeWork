@@ -1,19 +1,28 @@
+using System;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     private Wallet _wallet;
+    private Timer _timer;
     private UserInterface _userInterface;
+    private Canvas _canvas;
 
     private void Start()
     {
+        _canvas.gameObject.SetActive(true);
         _wallet.Changed += _userInterface.RefreshUIText;
-    }
 
-    public void Init(Wallet wallet, UserInterface userInterface)
+        _timer = new Timer(this);
+        _timer.Changed += _userInterface.ShowSliderValue;
+        _timer.Changed += _userInterface.ShowHeartValue;
+    }    
+
+    public void Init(Wallet wallet, UserInterface userInterface, Canvas canvas)
     {
         _wallet = wallet;
         _userInterface = userInterface;
+        _canvas = canvas;
     }
 
     private void Update()
@@ -23,6 +32,12 @@ public class GameManager : MonoBehaviour
         GetMoreDiamond();
 
         GetMorePower();
+
+        StartTimer();
+
+        PauseTimer();
+
+        ResetTimer();
     }
 
     private void GetMoreCoins()
@@ -43,5 +58,23 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.E))
             _wallet.Add(15, Currency.Energy);
+    }
+
+    private void StartTimer()
+    {
+        if (Input.GetKeyDown(KeyCode.S))
+            _timer.StartTimer();
+    }
+
+    private void PauseTimer()
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+            _timer.PauseTimer();
+    }
+
+    private void ResetTimer()
+    {
+        if (Input.GetKeyDown(KeyCode.R))
+            _timer.ResetTimer();
     }
 }
