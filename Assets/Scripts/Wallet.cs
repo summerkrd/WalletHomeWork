@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public enum Currency
@@ -10,6 +11,7 @@ public enum Currency
 
 public class Wallet
 {
+    private Dictionary<Currency, int> _currencies;
     public event Action<int, Currency> Changed;
 
     public Wallet(int maxValue)
@@ -18,6 +20,11 @@ public class Wallet
             maxValue = 0;
 
         MaxValue = maxValue;
+
+        _currencies = new Dictionary<Currency, int>();
+        _currencies.Add(Currency.Coin, default);
+        _currencies.Add(Currency.Diamond, default);
+        _currencies.Add(Currency.Energy, default);
     }
 
     public int CoinValue { get; private set; }
@@ -39,36 +46,15 @@ public class Wallet
     }
 
     public void Add(int value, Currency currency)
-    {
-        int currentValue = 0;
-
+    {        
         if (value < 0)
             value = 0;
 
         if (IsEnoughSpace(value, currency) == false)
             throw new ArgumentOutOfRangeException(nameof(value));
-                
-        switch (currency)
-        {
-            case Currency.Coin:
-                CoinValue += value;
-                currentValue = CoinValue;
-                Debug.Log("CoinValue: " + CoinValue);
-                break;
 
-            case Currency.Diamond:
-                DiamondValue += value;
-                currentValue = DiamondValue;
-                Debug.Log("DiamondValue: " + DiamondValue);
-                break;
+        _currencies[currency] += value;
 
-            case Currency.Energy:
-                EnergyValue += value;
-                currentValue = EnergyValue;
-                Debug.Log("EnergyValue: " + EnergyValue);
-                break;
-        }
-
-        Changed?.Invoke(currentValue, currency);        
+        Changed?.Invoke(_currencies[currency], currency);        
     }
 }
